@@ -1,16 +1,24 @@
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 
-#include <GL/glut.h>
+#include <gl/glut.h>
 
-void display(void)
-{
-}
+#include "ServerOperation.h"
+#include "Renderer.h"
+
+void display(void);
 
 int main(int argc, char *argv[])
 {
-  glutInit(&argc, argv);
-  glutCreateWindow(argv[0]);
-  glutDisplayFunc(display);
-  glutMainLoop();
-  return 0;
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_RGBA);
+	glutCreateWindow(argv[0]);
+	glutDisplayFunc(display);
+	g_renderer.init();
+	glutMainLoop();
+	return 0;
+}
+
+void display(void)
+{
+	g_renderer.render();
 }
