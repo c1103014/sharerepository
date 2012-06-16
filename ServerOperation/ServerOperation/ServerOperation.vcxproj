@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{161B94B1-CD61-409A-9794-594CFD67C579}</ProjectGuid>
+    <ProjectGuid>{2E73B5F6-8ADF-401E-AABA-C376ACE65AB6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ServerOperation</RootNamespace>
   </PropertyGroup>
