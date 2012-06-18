@@ -1,11 +1,12 @@
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 
-#include <gl/glut.h>
-
 #include "ServerOperation.h"
 #include "Renderer.h"
 
+#include <gl/glut.h>
+
 void display(void);
+Renderer g_renderer;
 
 int main(int argc, char *argv[])
 {
