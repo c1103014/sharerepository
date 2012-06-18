@@ -147,10 +147,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bitmap24.cpp" />
+    <ClCompile Include="ImageInfo.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ServerOperation.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bitmap24.h" />
+    <ClInclude Include="ImageInfo.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ServerOperation.h" />
   </ItemGroup>
