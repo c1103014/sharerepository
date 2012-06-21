@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{35DF772D-6343-4F3F-8890-162BCE26353B}</ProjectGuid>
+    <ProjectGuid>{928F4BFB-62DB-4C2C-A83D-AF6916D63207}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>libtga</RootNamespace>
   </PropertyGroup>
@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tga.h" />
+    <ClInclude Include="TgaLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
