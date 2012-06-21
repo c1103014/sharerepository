@@ -141,7 +141,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tga.h" />
-    <ClInclude Include="TgaLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
