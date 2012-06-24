@@ -10,6 +10,7 @@ Renderer g_renderer;
 
 int main(int argc, char *argv[])
 {
+	//test
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA);
 	glutCreateWindow(argv[0]);
