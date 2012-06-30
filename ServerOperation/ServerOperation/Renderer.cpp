@@ -1,4 +1,6 @@
 #include <iostream>
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <gl/glut.h>
 
 #include "ServerOperation.h"
@@ -70,18 +72,25 @@ void Renderer::init(void)
 
 void Renderer::render(void)
 {
+	static double dRadian = 0.0;
+
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 
-	// 視点の位置設定
-	gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	gluLookAt(5.0 * sin(dRadian), 0.0, 5.0 * cos(dRadian), 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
 	// 描画
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glVertexPointer(3, GL_FLOAT, 0, m_afVertex);
 	glTexCoordPointer(2, GL_FLOAT, 0, m_afTextureAxis);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, m_ashVertexIndex);
-	glFlush();
+	glutSwapBuffers();
+
+	// 視点の位置設定
+	dRadian += 0.05;
+	if (dRadian > 2 * M_PI) {
+		dRadian -= 2 * M_PI;
+	}
 }
 
 void Renderer::resize(int w, int h)
