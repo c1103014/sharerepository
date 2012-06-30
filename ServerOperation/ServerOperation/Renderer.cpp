@@ -1,4 +1,6 @@
 #include <iostream>
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <gl/glut.h>
 
 #include "ServerOperation.h"
@@ -8,6 +10,12 @@
 Renderer::Renderer(void)
 {
 	// 背景ポリゴンの初期化
+//	m_afVertex[0] = -1.0f; m_afVertex[1] = 1.0f; m_afVertex[2] = 0.0f;
+//	m_afVertex[3] = -1.0f; m_afVertex[4] = -1.0f; m_afVertex[5] = 0.0f;
+//	m_afVertex[6] = 1.0f; m_afVertex[7] = -1.0f; m_afVertex[8] = 0.0f;
+//	m_afVertex[9] = 1.0f; m_afVertex[10] = 1.0f; m_afVertex[11] = 0.0f;
+
+	// 背景ポリゴンの初期化(テストデータ)
 	m_afVertex[0] = -0.9f; m_afVertex[1] = 0.9f; m_afVertex[2] = 0.0f;
 	m_afVertex[3] = -0.9f; m_afVertex[4] = -0.9f; m_afVertex[5] = 0.0f;
 	m_afVertex[6] = 0.9f; m_afVertex[7] = -0.9f; m_afVertex[8] = 0.0f;
@@ -50,7 +58,11 @@ void Renderer::init(void)
 	glBindTexture(GL_TEXTURE_2D, m_unBgTexture);
 	ImageInfo imageInfo;
 	imageInfo.load(g_szBgImagePath);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageInfo.getWidth(), imageInfo.getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, imageInfo.getImageData());
+	if (imageInfo.getDepth() == 24) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageInfo.getWidth(), imageInfo.getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, imageInfo.getImageData());
+	} else {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageInfo.getWidth(), imageInfo.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, imageInfo.getImageData());
+	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -60,10 +72,39 @@ void Renderer::init(void)
 
 void Renderer::render(void)
 {
+	static double dRadian = 0.0;
+
 	glClear(GL_COLOR_BUFFER_BIT);
+	glLoadIdentity();
+
+	gluLookAt(5.0 * sin(dRadian), 0.0, 5.0 * cos(dRadian), 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+	// 描画
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glVertexPointer(3, GL_FLOAT, 0, m_afVertex);
 	glTexCoordPointer(2, GL_FLOAT, 0, m_afTextureAxis);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, m_ashVertexIndex);
-	glFlush();
+	glutSwapBuffers();
+
+	// 視点の位置設定
+	dRadian += 0.05;
+	if (dRadian > 2 * M_PI) {
+		dRadian -= 2 * M_PI;
+	}
+}
+
+void Renderer::resize(int w, int h)
+{
+	// ウィンドウ全体をビューポートに設定
+	glViewport(0, 0, w, h);
+
+	// 透視投影モード
+	glMatrixMode(GL_PROJECTION);
+	// 変換行列の初期化
+	glLoadIdentity();
+	// 透視投影
+	gluPerspective(27.0, (double)w / (double)h, 1.0, 100.0);
+
+	// モデルビューモード
+	glMatrixMode(GL_MODELVIEW);
 }
