@@ -2,7 +2,7 @@
 
 #include "ImageInfo.h"
 #include "bitmap24.h"
-#include "TgaLoader.h"
+#include "TgaImg.h"
 
 ImageInfo::ImageInfo(void)
 {
@@ -25,8 +25,12 @@ ImageInfo::~ImageInfo(void)
  */
 VOID ImageInfo::load(string szImagePath)
 {
+	if (m_ImageData != NULL) {
+		delete [] m_ImageData;
+		m_ImageData = NULL;
+	}
 	string szBmpExt("bmp");
-	INT nPos = szImagePath.rfind(szBmpExt, szImagePath.length() - 1);
+	INT nPos = static_cast<INT>(szImagePath.rfind(szBmpExt, szImagePath.length() - 1));
 	if (nPos == szImagePath.length() - szBmpExt.length()) {
 		CBitmap24 bmp;
 		bmp.Load(szImagePath);
@@ -38,16 +42,15 @@ VOID ImageInfo::load(string szImagePath)
 		bmp.Delete();
 	}
 	string szTgaExt("tga");
-	nPos = szImagePath.rfind(szTgaExt, szImagePath.length() - 1);
+	nPos = static_cast<INT>(szImagePath.rfind(szTgaExt, szImagePath.length() - 1));
 	if (nPos == szImagePath.length() - szTgaExt.length()) {
-		CTgaLoader tga;
+		TGAImg tga;
 		tga.Load(const_cast<char *>(szImagePath.c_str()));
-		m_nWidth = tga.getWidth();
-		m_nHeight = tga.getHeight();
-		m_nDepth = tga.getDepth();
+		m_nWidth = tga.GetWidth();
+		m_nHeight = tga.GetHeight();
+		m_nDepth = tga.GetBPP();
 		m_ImageData = new BYTE[m_nWidth * m_nHeight * (m_nDepth / 8)];
-		memcpy(m_ImageData, tga.getImageData(), sizeof(BYTE) * m_nWidth * m_nHeight * (m_nDepth / 8));
-		tga.Delete();
+		memcpy(m_ImageData, tga.GetImg(), sizeof(BYTE) * m_nWidth * m_nHeight * (m_nDepth / 8));
 	}
 }
 
