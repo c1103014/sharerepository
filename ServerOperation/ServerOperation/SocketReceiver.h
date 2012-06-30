@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include "winsock2.h"
 
-class SocketReveiver{
+class SocketReceiver{
 	SOCKET s, s1;         //ソケット
 	int result;          //戻り値
 	//接続を許可するクライアント端末の情報
@@ -11,7 +11,7 @@ class SocketReveiver{
 	char ret;
 
 public:
-	SocketReveiver();
+	SocketReceiver();
 	void start();
 
 };
