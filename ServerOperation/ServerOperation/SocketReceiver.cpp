@@ -1,6 +1,6 @@
 #include "SocketReceiver.h"
 
-SocketReveiver::SocketReveiver(){
+SocketReceiver::SocketReceiver(){
 		memset(&buffer, '\0', sizeof(buffer));
 		//送信元の端末情報を登録する
 		memset(&source, 0, sizeof(source));
@@ -46,7 +46,7 @@ SocketReveiver::SocketReveiver(){
 		}
 }
 
-void SocketReveiver::start()            //メンバ関数(start)の定義
+void SocketReceiver::start()            //メンバ関数(start)の定義
 {
 	//toDo future by nakagawa
 }

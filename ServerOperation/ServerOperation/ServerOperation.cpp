@@ -1,4 +1,4 @@
-#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
+//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 
 #include "ServerOperation.h"
 #include "Renderer.h"
@@ -8,17 +8,17 @@
 void display(void);
 Renderer g_renderer;
 
-int main(int argc, char *argv[])
-{
-	//test
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGBA);
-	glutCreateWindow(argv[0]);
-	glutDisplayFunc(display);
-	g_renderer.init();
-	glutMainLoop();
-	return 0;
-}
+//int main(int argc, char *argv[])
+//{
+//	//test
+//	glutInit(&argc, argv);
+//	glutInitDisplayMode(GLUT_RGBA);
+//	glutCreateWindow(argv[0]);
+//	glutDisplayFunc(display);
+//	g_renderer.init();
+//	glutMainLoop();
+//	return 0;
+//}
 
 void display(void)
 {
