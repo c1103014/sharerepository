@@ -16,20 +16,20 @@ Renderer::Renderer(void)
 //	m_afVertex[9] = 1.0f; m_afVertex[10] = 1.0f; m_afVertex[11] = 0.0f;
 
 	// 背景ポリゴンの初期化(テストデータ)
-	m_afVertex[0] = -0.9f; m_afVertex[1] = 0.9f; m_afVertex[2] = 0.0f;
-	m_afVertex[3] = -0.9f; m_afVertex[4] = -0.9f; m_afVertex[5] = 0.0f;
-	m_afVertex[6] = 0.9f; m_afVertex[7] = -0.9f; m_afVertex[8] = 0.0f;
-	m_afVertex[9] = 0.9f; m_afVertex[10] = 0.9f; m_afVertex[11] = 0.0f;
+	m_afVertex[0] = -9.0f; m_afVertex[1] = 9.0f; m_afVertex[2] = 10.0f;
+	m_afVertex[3] = -9.0f; m_afVertex[4] = -9.0f; m_afVertex[5] = 10.0f;
+	m_afVertex[6] = 9.0f; m_afVertex[7] = -9.0f; m_afVertex[8] = 10.0f;
+	m_afVertex[9] = 9.0f; m_afVertex[10] = 9.0f; m_afVertex[11] = 10.0f;
 
 	// 背景ポリゴンの頂点インデックスの初期化
 	m_ashVertexIndex[0] = 0; m_ashVertexIndex[1] = 1; m_ashVertexIndex[2] = 2;
 	m_ashVertexIndex[3] = 0; m_ashVertexIndex[4] = 2; m_ashVertexIndex[5] = 3;
 
 	// 背景テクスチャ座標配列の初期化
-	m_afTextureAxis[0] = 0.0f; m_afTextureAxis[1] = 0.0f;
-	m_afTextureAxis[2] = 0.0f; m_afTextureAxis[3] = 1.0f;
-	m_afTextureAxis[4] = 1.0f; m_afTextureAxis[5] = 1.0f;
-	m_afTextureAxis[6] = 1.0f; m_afTextureAxis[7] = 0.0f;
+	m_afTextureAxis[0] = 1.0f; m_afTextureAxis[1] = 0.0f;
+	m_afTextureAxis[2] = 1.0f; m_afTextureAxis[3] = 1.0f;
+	m_afTextureAxis[4] = 0.0f; m_afTextureAxis[5] = 1.0f;
+	m_afTextureAxis[6] = 0.0f; m_afTextureAxis[7] = 0.0f;
 
 	// テクスチャ変数の初期化
 	m_unBgTexture = 0;
@@ -46,6 +46,18 @@ void Renderer::init(void)
 
 	// 頂点配列を有効
 	glEnableClientState(GL_VERTEX_ARRAY);
+
+	// デプスバッファを有効
+	glEnable(GL_DEPTH_TEST);
+
+	// カリングを有効
+	glEnable(GL_CULL_FACE);
+
+	// 背面のポリゴンを透明化
+	glCullFace(GL_BACK);
+
+	// 頂点設定順を時計回りに設定
+	glFrontFace(GL_CW);
 
 	// テクスチャを有効
 	glEnable(GL_TEXTURE_2D);
@@ -74,10 +86,10 @@ void Renderer::render(void)
 {
 	static double dRadian = 0.0;
 
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	gluLookAt(5.0 * sin(dRadian), 0.0, 5.0 * cos(dRadian), 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	gluLookAt(50.0 * sin(dRadian), 20.0, 50.0 * cos(dRadian), 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
 	// 描画
 	glColor3f(1.0f, 1.0f, 1.0f);
