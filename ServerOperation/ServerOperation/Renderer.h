@@ -9,6 +9,7 @@ public:
 	virtual ~Renderer(void);
 	void init(void);
 	void render(void);
+	void resize(int w, int h);
 private:
 	GLfloat m_afVertex[12];
 	GLushort m_ashVertexIndex[6];

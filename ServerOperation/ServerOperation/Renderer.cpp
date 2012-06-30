@@ -71,9 +71,31 @@ void Renderer::init(void)
 void Renderer::render(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
+	glLoadIdentity();
+
+	// 視点の位置設定
+	gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+	// 描画
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glVertexPointer(3, GL_FLOAT, 0, m_afVertex);
 	glTexCoordPointer(2, GL_FLOAT, 0, m_afTextureAxis);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, m_ashVertexIndex);
 	glFlush();
+}
+
+void Renderer::resize(int w, int h)
+{
+	// ウィンドウ全体をビューポートに設定
+	glViewport(0, 0, w, h);
+
+	// 透視投影モード
+	glMatrixMode(GL_PROJECTION);
+	// 変換行列の初期化
+	glLoadIdentity();
+	// 透視投影
+	gluPerspective(27.0, (double)w / (double)h, 1.0, 100.0);
+
+	// モデルビューモード
+	glMatrixMode(GL_MODELVIEW);
 }

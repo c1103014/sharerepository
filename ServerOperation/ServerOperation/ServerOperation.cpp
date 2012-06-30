@@ -1,11 +1,13 @@
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 
+#include <Windows.h>
+#include <gl/glut.h>
+
 #include "ServerOperation.h"
 #include "Renderer.h"
 
-#include <gl/glut.h>
-
 void display(void);
+void resize(int w, int h);
 Renderer g_renderer;
 
 int main(int argc, char *argv[])
@@ -14,6 +16,7 @@ int main(int argc, char *argv[])
 	glutInitDisplayMode(GLUT_RGBA);
 	glutCreateWindow(argv[0]);
 	glutDisplayFunc(display);
+	glutReshapeFunc(resize);
 	g_renderer.init();
 	glutMainLoop();
 	return 0;
@@ -22,4 +25,9 @@ int main(int argc, char *argv[])
 void display(void)
 {
 	g_renderer.render();
+}
+
+void resize(int w, int h)
+{
+	g_renderer.resize(w, h);
 }
