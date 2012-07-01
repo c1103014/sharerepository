@@ -151,12 +151,16 @@
     <ClCompile Include="ImageInfo.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ServerOperation.cpp" />
+    <ClCompile Include="SocketReceiver.cpp" />
+    <ClCompile Include="TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap24.h" />
     <ClInclude Include="ImageInfo.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ServerOperation.h" />
+    <ClInclude Include="SocketReceiver.h" />
+    <ClInclude Include="TestMain.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
