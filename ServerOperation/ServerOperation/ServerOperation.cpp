@@ -1,4 +1,4 @@
-#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
+//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 
 #include <Windows.h>
 #include <gl/glut.h>
