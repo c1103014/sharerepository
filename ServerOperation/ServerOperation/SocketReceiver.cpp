@@ -1,6 +1,7 @@
 #include "SocketReceiver.h"
 
 SocketReceiver::SocketReceiver(){
+
 		memset(&buffer, '\0', sizeof(buffer));
 		//‘—MŒ³‚Ì’[––î•ñ‚ğ“o˜^‚·‚é
 		memset(&source, 0, sizeof(source));
