@@ -6,7 +6,7 @@ SocketReceiver::SocketReceiver(){
 		memset(&source, 0, sizeof(source));
 		source.sin_family = AF_INET;
 		//ポート番号はクライアントプログラムと共通
-		source.sin_port = htons(7000);
+		source.sin_port = htons(8000);
 		source.sin_addr.s_addr = htonl(INADDR_ANY);
 
 		//ソケット通信の開始準備
@@ -44,6 +44,30 @@ SocketReceiver::SocketReceiver(){
 		if (s1 < 0){
 			printf("待機エラー\n");
 		}
+
+ 
+		//written by naka
+		while(1){ 
+			//クライアントから送信されたデータの受信
+			result = recv(s1, buffer, 10, 0);
+			if (result < 0){
+				printf("受信エラー\n");
+			}
+			printf("%sを受信しました", buffer);
+			
+			//by naka
+			//forced disconnect socket connection process in future. 
+			//if(){
+				//WSACleanup();
+				//printf("接続終了\n");
+			//}	
+		}
+
+		//クライアントへデータを送信する
+		//result = send(s1, ans, 10, 0);
+
+		//printf("何かキーを押して下さい\n");
+		//scanf("%c", &ret);
 }
 
 void SocketReceiver::start()            //メンバ関数(start)の定義
