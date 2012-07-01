@@ -29,11 +29,11 @@ typedef struct tagPmdVertex {
  * çﬁéøèÓïÒç\ë¢ëÃ
  */
 typedef struct tagPmdMaterial {
-	float fDiffuseColor[3];
+	float fDiffuseColor[4];
 	float fAlpha;
 	float fSpecularity;
-	float fSpecularColor[3];
-	float fMirrorColor[3];
+	float fSpecularColor[4];
+	float fMirrorColor[4];
 	BYTE byToonIndex;
 	BYTE byEdgeFlag;
 	DWORD dwFaceNumber;

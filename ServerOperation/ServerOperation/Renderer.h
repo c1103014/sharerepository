@@ -2,6 +2,8 @@
 
 #include <gl/glut.h>
 
+#include "PmdRenderer.h"
+
 class Renderer
 {
 public:
@@ -15,4 +17,5 @@ private:
 	GLushort m_ashVertexIndex[6];
 	GLfloat m_afTextureAxis[8];
 	GLuint m_unBgTexture;
+	CPmdRenderer pmdRenderer;
 };

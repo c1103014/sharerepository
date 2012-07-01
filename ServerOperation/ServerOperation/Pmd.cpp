@@ -78,6 +78,9 @@ int CPmd::load(char *szFileName)
 		fread(&mlpMaterial[i].fSpecularity, sizeof(float), 1, fp);
 		fread(mlpMaterial[i].fSpecularColor, sizeof(float), 3, fp);
 		fread(mlpMaterial[i].fMirrorColor, sizeof(float), 3, fp);
+		mlpMaterial[i].fDiffuseColor[3] = mlpMaterial[i].fAlpha;
+		mlpMaterial[i].fSpecularColor[3] = mlpMaterial[i].fAlpha;
+		mlpMaterial[i].fMirrorColor[3] = mlpMaterial[i].fAlpha;
 		fread(&mlpMaterial[i].byToonIndex, sizeof(BYTE), 1, fp);
 		fread(&mlpMaterial[i].byEdgeFlag, sizeof(BYTE), 1, fp);
 		fread(&mlpMaterial[i].dwFaceNumber, sizeof(DWORD), 1, fp);

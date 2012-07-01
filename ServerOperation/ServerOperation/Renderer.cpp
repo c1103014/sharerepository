@@ -6,6 +6,7 @@
 #include "ServerOperation.h"
 #include "Renderer.h"
 #include "ImageInfo.h"
+#include "PmdRenderer.h"
 
 Renderer::Renderer(void)
 {
@@ -16,10 +17,10 @@ Renderer::Renderer(void)
 //	m_afVertex[9] = 1.0f; m_afVertex[10] = 1.0f; m_afVertex[11] = 0.0f;
 
 	// 背景ポリゴンの初期化(テストデータ)
-	m_afVertex[0] = -9.0f; m_afVertex[1] = 9.0f; m_afVertex[2] = 10.0f;
-	m_afVertex[3] = -9.0f; m_afVertex[4] = -9.0f; m_afVertex[5] = 10.0f;
-	m_afVertex[6] = 9.0f; m_afVertex[7] = -9.0f; m_afVertex[8] = 10.0f;
-	m_afVertex[9] = 9.0f; m_afVertex[10] = 9.0f; m_afVertex[11] = 10.0f;
+	m_afVertex[0] = -9.0f; m_afVertex[1] = 18.0f; m_afVertex[2] = 10.0f;
+	m_afVertex[3] = -9.0f; m_afVertex[4] = 0.0f; m_afVertex[5] = 10.0f;
+	m_afVertex[6] = 9.0f; m_afVertex[7] = 0.0f; m_afVertex[8] = 10.0f;
+	m_afVertex[9] = 9.0f; m_afVertex[10] = 18.0f; m_afVertex[11] = 10.0f;
 
 	// 背景ポリゴンの頂点インデックスの初期化
 	m_ashVertexIndex[0] = 0; m_ashVertexIndex[1] = 1; m_ashVertexIndex[2] = 2;
@@ -54,7 +55,30 @@ void Renderer::init(void)
 	glEnable(GL_CULL_FACE);
 
 	// 背面のポリゴンを透明化
-	glCullFace(GL_BACK);
+	glCullFace(GL_FRONT);
+
+	// アルファブレンド
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	// アルファテスト
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GEQUAL, 0.5);
+
+	// 光源の設定
+	float fLightPos[] = { 0.45f, 0.55f, 1.0f, 0.0f };
+	float fLightDif[] = { 0.9f, 0.9f, 0.9f, 0.0f };
+	float fLightAmb[] = { 1.0f, 1.0f, 1.0f, 0.0f };
+	float fLightSpq[] = { 0.9f, 0.9f, 0.9f, 0.0f };
+	glLightfv(GL_LIGHT0, GL_POSITION, fLightPos);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, fLightDif);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, fLightAmb);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, fLightSpq);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHTING);
+
+	// スムーズシェーディング
+	//glShadeModel(GL_SMOOTH);
 
 	// 頂点設定順を時計回りに設定
 	glFrontFace(GL_CW);
@@ -80,25 +104,32 @@ void Renderer::init(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+	pmdRenderer.load("res\\pmd\\Lat式ミクVer2.3\\Lat式ミクVer2.3_Normal.pmd");
 }
 
 void Renderer::render(void)
 {
 	static double dRadian = 0.0;
 
+	// 画面初期化
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// 行列の初期化
 	glLoadIdentity();
 
-	gluLookAt(50.0 * sin(dRadian), 20.0, 50.0 * cos(dRadian), 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	// 視点の位置設定
+	gluLookAt(50.0 * sin(dRadian), 30.0, -50.0 * cos(dRadian), 0.0, 10.0, 0.0, 0.0, 1.0, 0.0);
 
 	// 描画
-	glColor3f(1.0f, 1.0f, 1.0f);
 	glVertexPointer(3, GL_FLOAT, 0, m_afVertex);
 	glTexCoordPointer(2, GL_FLOAT, 0, m_afTextureAxis);
+	glBindTexture(GL_TEXTURE_2D, m_unBgTexture);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, m_ashVertexIndex);
+	pmdRenderer.render();
 	glutSwapBuffers();
 
-	// 視点の位置設定
+	// 回転角設定
 	dRadian += 0.05;
 	if (dRadian > 2 * M_PI) {
 		dRadian -= 2 * M_PI;
