@@ -153,20 +153,24 @@
   <ItemGroup>
     <ClCompile Include="bitmap24.cpp" />
     <ClCompile Include="ImageInfo.cpp" />
+    <ClCompile Include="MatrixUtility.cpp" />
     <ClCompile Include="Pmd.cpp" />
     <ClCompile Include="PmdRenderer.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ServerOperation.cpp" />
     <ClCompile Include="TGAImg.cpp" />
+    <ClCompile Include="Vmd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitmap24.h" />
     <ClInclude Include="ImageInfo.h" />
+    <ClInclude Include="MatrixUtility.h" />
     <ClInclude Include="Pmd.h" />
     <ClInclude Include="PmdRenderer.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ServerOperation.h" />
     <ClInclude Include="TGAImg.h" />
+    <ClInclude Include="Vmd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

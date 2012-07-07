@@ -111,6 +111,9 @@ int CPmd::load(char *szFileName)
 		mlpBone[i].fQuaternion[1] = 0.0;
 		mlpBone[i].fQuaternion[2] = 0.0;
 		mlpBone[i].fQuaternion[3] = 0.0;
+		mlpBone[i].fTransformPos[0] = 0.0;
+		mlpBone[i].fTransformPos[1] = 0.0;
+		mlpBone[i].fTransformPos[2] = 0.0;
 	}
 
 	fclose(fp);

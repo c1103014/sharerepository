@@ -54,6 +54,9 @@ typedef struct tagPmdBone {
 	WORD wIKBoneIndex;
 	float fBoneHeadPos[3];
 	float fQuaternion[4];
+	float fTransformPos[3]; // ˆÚ“®Œã‚ÌˆÊ’u
+	float fVmdTrans[3]; // vmd‚É‹Lq‚³‚ê‚Ä‚¢‚éˆÚ“®—Ê
+	float fRotMat[16];
 } PMDBONE;
 
 /**

@@ -119,7 +119,9 @@ void Renderer::render(void)
 	glLoadIdentity();
 
 	// 視点の位置設定
-	gluLookAt(50.0 * sin(dRadian), 30.0, -50.0 * cos(dRadian), 0.0, 10.0, 0.0, 0.0, 1.0, 0.0);
+	//gluLookAt(50.0 * sin(dRadian), 30.0, -50.0 * cos(dRadian), 0.0, 10.0, 0.0, 0.0, 1.0, 0.0);
+	gluLookAt(50.0 * sin(dRadian), 20.0, -50.0 * cos(dRadian), 0.0, 10.0, 0.0, 0.0, 1.0, 0.0);
+	//gluLookAt(0.0, 20.0, -50.0, 0.0, 10.0, 0.0, 0.0, 1.0, 0.0);
 
 	// 描画
 	glVertexPointer(3, GL_FLOAT, 0, m_afVertex);
@@ -130,7 +132,7 @@ void Renderer::render(void)
 	glutSwapBuffers();
 
 	// 回転角設定
-	dRadian += 0.05;
+	dRadian += 0.025;
 	if (dRadian > 2 * M_PI) {
 		dRadian -= 2 * M_PI;
 	}
@@ -146,7 +148,7 @@ void Renderer::resize(int w, int h)
 	// 変換行列の初期化
 	glLoadIdentity();
 	// 透視投影
-	gluPerspective(27.0, (double)w / (double)h, 1.0, 100.0);
+	gluPerspective(27.0, (double)w / (double)h, 1.0, 1000.0);
 
 	// モデルビューモード
 	glMatrixMode(GL_MODELVIEW);

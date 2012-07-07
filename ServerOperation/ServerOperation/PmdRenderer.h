@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Pmd.h"
+#include "Vmd.h"
 
 using namespace std;
 
@@ -16,4 +17,5 @@ public:
 	VOID render(VOID);
 private:
 	CPmd pmd;
+	CVmd vmd;
 };
