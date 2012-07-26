@@ -80,15 +80,24 @@ VOID CPmdRenderer::render(VOID)
 	static DWORD dwFrameNo = 0;
 	for (USHORT i = 0; i < pmd.mwBoneCount; i++) {
 		for (UINT j = 0; j < vmd.mdwBoneFrameCount; j++) {
-			if (string(pmd.mlpBone[i].szBoneName) == string(vmd.mlpBoneFrame[j].szName) && vmd.mlpBoneFrame[j].dwFrameNo == dwFrameNo) {
-				pmd.mlpBone[i].fQuaternion[0] = vmd.mlpBoneFrame[j].fQuaternionX;
-				pmd.mlpBone[i].fQuaternion[1] = vmd.mlpBoneFrame[j].fQuaternionY;
-				pmd.mlpBone[i].fQuaternion[2] = vmd.mlpBoneFrame[j].fQuaternionZ;
-				pmd.mlpBone[i].fQuaternion[3] = vmd.mlpBoneFrame[j].fQuaternionW;
-				pmd.mlpBone[i].fTransformPos[0] = pmd.mlpBone[i].fVmdTrans[0] = vmd.mlpBoneFrame[j].fPosX;
-				pmd.mlpBone[i].fTransformPos[1] = pmd.mlpBone[i].fVmdTrans[1] = vmd.mlpBoneFrame[j].fPosY;
-				pmd.mlpBone[i].fTransformPos[2] = pmd.mlpBone[i].fVmdTrans[2] = vmd.mlpBoneFrame[j].fPosZ;
+			if (vmd.mlpBoneFrame[j].dwFrameNo == dwFrameNo && string(pmd.mlpBone[i].szBoneName) == string(vmd.mlpBoneFrame[j].szName)) {
+				pmd.mlpBone[i].fQuaternion[0] = pmd.mlpBone[i].fPreviousQuat[0] = vmd.mlpBoneFrame[j].fQuaternionX;
+				pmd.mlpBone[i].fQuaternion[1] = pmd.mlpBone[i].fPreviousQuat[1] = vmd.mlpBoneFrame[j].fQuaternionY;
+				pmd.mlpBone[i].fQuaternion[2] = pmd.mlpBone[i].fPreviousQuat[2] = vmd.mlpBoneFrame[j].fQuaternionZ;
+				pmd.mlpBone[i].fQuaternion[3] = pmd.mlpBone[i].fPreviousQuat[3] = vmd.mlpBoneFrame[j].fQuaternionW;
+				pmd.mlpBone[i].fTransformPos[0] = pmd.mlpBone[i].fPreviousTrans[0] = vmd.mlpBoneFrame[j].fPosX;
+				pmd.mlpBone[i].fTransformPos[1] = pmd.mlpBone[i].fPreviousTrans[1] = vmd.mlpBoneFrame[j].fPosY;
+				pmd.mlpBone[i].fTransformPos[2] = pmd.mlpBone[i].fPreviousTrans[2] = vmd.mlpBoneFrame[j].fPosZ;
 				break;
+			}
+			if (j == vmd.mdwBoneFrameCount - 1) {
+				pmd.mlpBone[i].fQuaternion[0] = pmd.mlpBone[i].fPreviousQuat[0];
+				pmd.mlpBone[i].fQuaternion[1] = pmd.mlpBone[i].fPreviousQuat[1];
+				pmd.mlpBone[i].fQuaternion[2] = pmd.mlpBone[i].fPreviousQuat[2];
+				pmd.mlpBone[i].fQuaternion[3] = pmd.mlpBone[i].fPreviousQuat[3];
+				pmd.mlpBone[i].fTransformPos[0] = pmd.mlpBone[i].fPreviousTrans[0];
+				pmd.mlpBone[i].fTransformPos[1] = pmd.mlpBone[i].fPreviousTrans[1];
+				pmd.mlpBone[i].fTransformPos[2] = pmd.mlpBone[i].fPreviousTrans[2];
 			}
 		}
 	}
@@ -97,8 +106,9 @@ VOID CPmdRenderer::render(VOID)
 	static clock_t start = clock();
 	clock_t now = clock();
 	//dwFrameNo++;
-	if (dwFrameNo > 1000) {
-		dwFrameNo = 1000;
+	dwFrameNo = (now - start) / 33.456;
+	if (dwFrameNo > 7050) {
+		dwFrameNo = 7050;
 	}
 
 	static FLOAT r[4];
