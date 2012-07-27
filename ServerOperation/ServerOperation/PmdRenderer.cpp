@@ -78,8 +78,18 @@ VOID CPmdRenderer::render(VOID)
 	// テストコード(ここから)
 	// ボーン設定
 	static DWORD dwFrameNo = 0;
+	static DWORD dwSearchStartIndex = 0;
+	for (UINT i = dwSearchStartIndex; i < vmd.mdwBoneFrameCount; i++) {
+		if (vmd.mlpBoneFrame[i].dwFrameNo == dwFrameNo) {
+			dwSearchStartIndex = i;
+			break;
+		}
+		if (vmd.mlpBoneFrame[i].dwFrameNo > dwFrameNo) {
+			break;
+		}
+	}
 	for (USHORT i = 0; i < pmd.mwBoneCount; i++) {
-		for (UINT j = 0; j < vmd.mdwBoneFrameCount; j++) {
+		for (UINT j = dwSearchStartIndex; j < vmd.mdwBoneFrameCount; j++) {
 			if (vmd.mlpBoneFrame[j].dwFrameNo == dwFrameNo && string(pmd.mlpBone[i].szBoneName) == string(vmd.mlpBoneFrame[j].szName)) {
 				pmd.mlpBone[i].fQuaternion[0] = pmd.mlpBone[i].fPreviousQuat[0] = vmd.mlpBoneFrame[j].fQuaternionX;
 				pmd.mlpBone[i].fQuaternion[1] = pmd.mlpBone[i].fPreviousQuat[1] = vmd.mlpBoneFrame[j].fQuaternionY;
@@ -88,16 +98,44 @@ VOID CPmdRenderer::render(VOID)
 				pmd.mlpBone[i].fTransformPos[0] = pmd.mlpBone[i].fPreviousTrans[0] = vmd.mlpBoneFrame[j].fPosX;
 				pmd.mlpBone[i].fTransformPos[1] = pmd.mlpBone[i].fPreviousTrans[1] = vmd.mlpBoneFrame[j].fPosY;
 				pmd.mlpBone[i].fTransformPos[2] = pmd.mlpBone[i].fPreviousTrans[2] = vmd.mlpBoneFrame[j].fPosZ;
+				pmd.mlpBone[i].unPreviousKeyFrame = dwFrameNo;
+				for (UINT k = j; k < vmd.mdwBoneFrameCount; k++) {
+					if (vmd.mlpBoneFrame[k].dwFrameNo > dwFrameNo && string(pmd.mlpBone[i].szBoneName) == string(vmd.mlpBoneFrame[k].szName)) {
+						pmd.mlpBone[i].fNextQuat[0] = vmd.mlpBoneFrame[k].fQuaternionX;
+						pmd.mlpBone[i].fNextQuat[1] = vmd.mlpBoneFrame[k].fQuaternionY;
+						pmd.mlpBone[i].fNextQuat[2] = vmd.mlpBoneFrame[k].fQuaternionZ;
+						pmd.mlpBone[i].fNextQuat[3] = vmd.mlpBoneFrame[k].fQuaternionW;
+						pmd.mlpBone[i].fNextTrans[0] = vmd.mlpBoneFrame[k].fPosX;
+						pmd.mlpBone[i].fNextTrans[1] = vmd.mlpBoneFrame[k].fPosY;
+						pmd.mlpBone[i].fNextTrans[2] = vmd.mlpBoneFrame[k].fPosZ;
+						pmd.mlpBone[i].unNextKeyFrame = vmd.mlpBoneFrame[k].dwFrameNo;
+						break;
+					}
+					if (k == vmd.mdwBoneFrameCount - 1) {
+						pmd.mlpBone[i].fNextQuat[0] = pmd.mlpBone[i].fPreviousQuat[0];
+						pmd.mlpBone[i].fNextQuat[1] = pmd.mlpBone[i].fPreviousQuat[1];
+						pmd.mlpBone[i].fNextQuat[2] = pmd.mlpBone[i].fPreviousQuat[2];
+						pmd.mlpBone[i].fNextQuat[3] = pmd.mlpBone[i].fPreviousQuat[3];
+						pmd.mlpBone[i].fNextTrans[0] = pmd.mlpBone[i].fPreviousTrans[0];
+						pmd.mlpBone[i].fNextTrans[1] = pmd.mlpBone[i].fPreviousTrans[1];
+						pmd.mlpBone[i].fNextTrans[2] = pmd.mlpBone[i].fPreviousTrans[2];
+						pmd.mlpBone[i].unNextKeyFrame = vmd.mlpBoneFrame[k].dwFrameNo;
+					}
+				}
 				break;
 			}
 			if (j == vmd.mdwBoneFrameCount - 1) {
-				pmd.mlpBone[i].fQuaternion[0] = pmd.mlpBone[i].fPreviousQuat[0];
-				pmd.mlpBone[i].fQuaternion[1] = pmd.mlpBone[i].fPreviousQuat[1];
-				pmd.mlpBone[i].fQuaternion[2] = pmd.mlpBone[i].fPreviousQuat[2];
-				pmd.mlpBone[i].fQuaternion[3] = pmd.mlpBone[i].fPreviousQuat[3];
-				pmd.mlpBone[i].fTransformPos[0] = pmd.mlpBone[i].fPreviousTrans[0];
-				pmd.mlpBone[i].fTransformPos[1] = pmd.mlpBone[i].fPreviousTrans[1];
-				pmd.mlpBone[i].fTransformPos[2] = pmd.mlpBone[i].fPreviousTrans[2];
+//				pmd.mlpBone[i].fQuaternion[0] = pmd.mlpBone[i].fPreviousQuat[0];
+//				pmd.mlpBone[i].fQuaternion[1] = pmd.mlpBone[i].fPreviousQuat[1];
+//				pmd.mlpBone[i].fQuaternion[2] = pmd.mlpBone[i].fPreviousQuat[2];
+//				pmd.mlpBone[i].fQuaternion[3] = pmd.mlpBone[i].fPreviousQuat[3];
+				slerp(pmd.mlpBone[i].fQuaternion, pmd.mlpBone[i].fPreviousQuat, pmd.mlpBone[i].fNextQuat, (dwFrameNo - pmd.mlpBone[i].unPreviousKeyFrame) * 1.0 / (pmd.mlpBone[i].unNextKeyFrame - pmd.mlpBone[i].unPreviousKeyFrame));
+//				pmd.mlpBone[i].fTransformPos[0] = pmd.mlpBone[i].fPreviousTrans[0];
+//				pmd.mlpBone[i].fTransformPos[1] = pmd.mlpBone[i].fPreviousTrans[1];
+//				pmd.mlpBone[i].fTransformPos[2] = pmd.mlpBone[i].fPreviousTrans[2];
+				pmd.mlpBone[i].fTransformPos[0] = pmd.mlpBone[i].fPreviousTrans[0] + (dwFrameNo - pmd.mlpBone[i].unPreviousKeyFrame) * (pmd.mlpBone[i].fNextTrans[0] - pmd.mlpBone[i].fPreviousTrans[0]) / (pmd.mlpBone[i].unNextKeyFrame - pmd.mlpBone[i].unPreviousKeyFrame);
+				pmd.mlpBone[i].fTransformPos[1] = pmd.mlpBone[i].fPreviousTrans[1] + (dwFrameNo - pmd.mlpBone[i].unPreviousKeyFrame) * (pmd.mlpBone[i].fNextTrans[1] - pmd.mlpBone[i].fPreviousTrans[1]) / (pmd.mlpBone[i].unNextKeyFrame - pmd.mlpBone[i].unPreviousKeyFrame);
+				pmd.mlpBone[i].fTransformPos[2] = pmd.mlpBone[i].fPreviousTrans[2] + (dwFrameNo - pmd.mlpBone[i].unPreviousKeyFrame) * (pmd.mlpBone[i].fNextTrans[2] - pmd.mlpBone[i].fPreviousTrans[2]) / (pmd.mlpBone[i].unNextKeyFrame - pmd.mlpBone[i].unPreviousKeyFrame);
 			}
 		}
 	}
@@ -107,6 +145,7 @@ VOID CPmdRenderer::render(VOID)
 	clock_t now = clock();
 	//dwFrameNo++;
 	dwFrameNo = (now - start) / 33.456;
+	//dwFrameNo = (now - start) / 200;
 	if (dwFrameNo > 7050) {
 		dwFrameNo = 7050;
 	}
@@ -160,26 +199,6 @@ VOID CPmdRenderer::render(VOID)
 		lpfVertex[i * 3] = (pos1[0] * pmd.mlpVertex[i].byBoneWeight / 100.0) + (pos2[0] * (100 - pmd.mlpVertex[i].byBoneWeight) / 100.0);
 		lpfVertex[i * 3 + 1] = (pos1[1] * pmd.mlpVertex[i].byBoneWeight / 100.0) + (pos2[1] * (100 - pmd.mlpVertex[i].byBoneWeight) / 100.0);
 		lpfVertex[i * 3 + 2] = (pos1[2] * pmd.mlpVertex[i].byBoneWeight / 100.0) + (pos2[2] * (100 - pmd.mlpVertex[i].byBoneWeight) / 100.0);
-/*
-		lpfVertex[i * 3] = (pmd.mlpVertex[i].fPosition[0] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[0]].fRotMat[0] +
-							pmd.mlpVertex[i].fPosition[1] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[0]].fRotMat[1] +
-							pmd.mlpVertex[i].fPosition[2] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[0]].fRotMat[2]) * pmd.mlpVertex[i].byBoneWeight / 100.0 +
-						   (pmd.mlpVertex[i].fPosition[0] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[1]].fRotMat[0] +
-							pmd.mlpVertex[i].fPosition[1] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[1]].fRotMat[1] +
-							pmd.mlpVertex[i].fPosition[2] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[1]].fRotMat[2]) * (100 - pmd.mlpVertex[i].byBoneWeight) / 100.0;
-		lpfVertex[i * 3 + 1] = (pmd.mlpVertex[i].fPosition[0] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[0]].fRotMat[4] +
-								pmd.mlpVertex[i].fPosition[1] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[0]].fRotMat[5] +
-								pmd.mlpVertex[i].fPosition[2] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[0]].fRotMat[6]) * pmd.mlpVertex[i].byBoneWeight / 100.0 +
-							   (pmd.mlpVertex[i].fPosition[0] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[1]].fRotMat[4] +
-								pmd.mlpVertex[i].fPosition[1] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[1]].fRotMat[5] +
-								pmd.mlpVertex[i].fPosition[2] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[1]].fRotMat[6]) * (100 - pmd.mlpVertex[i].byBoneWeight) / 100.0;
-		lpfVertex[i * 3 + 2] = (pmd.mlpVertex[i].fPosition[0] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[0]].fRotMat[8] +
-								pmd.mlpVertex[i].fPosition[1] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[0]].fRotMat[9] +
-								pmd.mlpVertex[i].fPosition[2] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[0]].fRotMat[10]) * pmd.mlpVertex[i].byBoneWeight / 100.0 +
-							   (pmd.mlpVertex[i].fPosition[0] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[1]].fRotMat[8] +
-								pmd.mlpVertex[i].fPosition[1] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[1]].fRotMat[9] +
-								pmd.mlpVertex[i].fPosition[2] * pmd.mlpBone[pmd.mlpVertex[i].wBoneNumber[1]].fRotMat[10]) * (100 - pmd.mlpVertex[i].byBoneWeight) / 100.0;
-*/
 	}
 	glVertexPointer(3, GL_FLOAT, 0, lpfVertex);
 	// テストコード(ここまで)

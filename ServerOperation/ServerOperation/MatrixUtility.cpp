@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <math.h>
 
 #include "MatrixUtility.h"
 
@@ -101,4 +102,31 @@ VOID multimatvec(FLOAT *m, FLOAT *v, FLOAT *r)
 	r[0] = m[0] * v[0] + m[1] * v[1] + m[2] * v[2];
 	r[1] = m[4] * v[0] + m[5] * v[1] + m[6] * v[2];
 	r[2] = m[8] * v[0] + m[9] * v[1] + m[10] * v[2];
+}
+
+/*
+** 球面線形補間 p ← q と r を t で補間したクォータニオン
+*/
+VOID slerp(FLOAT p[], const FLOAT q[], const FLOAT r[], const FLOAT t)
+{
+  FLOAT qr = q[0] * r[0] + q[1] * r[1] + q[2] * r[2] + q[3] * r[3];
+  FLOAT ss = 1.0 - qr * qr, sp;
+  
+  if (ss <= 0.0 || (sp = sqrt(ss)) == 0.0) {
+    p[0] = q[0];
+    p[1] = q[1];
+    p[2] = q[2];
+    p[3] = q[3];
+  }
+  else {
+    FLOAT ph = acos(qr);
+    FLOAT pt = ph * t;
+    FLOAT t1 = sin(pt) / sp;
+    FLOAT t0 = sin(ph - pt) / sp;
+    
+    p[0] = q[0] * t0 + r[0] * t1;
+    p[1] = q[1] * t0 + r[1] * t1;
+    p[2] = q[2] * t0 + r[2] * t1;
+    p[3] = q[3] * t0 + r[3] * t1;
+  }
 }

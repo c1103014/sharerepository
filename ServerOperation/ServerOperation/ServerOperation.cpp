@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	glutCreateWindow(argv[0]);
 	glutDisplayFunc(display);
 	glutReshapeFunc(resize);
-	glutTimerFunc(1000 / 30, timer, 0);
+	glutTimerFunc(1000 / 60, timer, 0);
 	g_renderer.init();
 	glutMainLoop();
 	return 0;
@@ -37,5 +37,5 @@ void resize(int w, int h)
 void timer(int value)
 {
 	glutPostRedisplay();
-	glutTimerFunc(1000 / 30, timer, 0);
+	glutTimerFunc(1000 / 60, timer, 0);
 }

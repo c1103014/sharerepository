@@ -55,9 +55,13 @@ typedef struct tagPmdBone {
 	float fBoneHeadPos[3];
 	float fQuaternion[4];
 	float fPreviousQuat[4];
+	float fNextQuat[4];
 	float fTransformPos[3]; // ˆÚ“®Œã‚ÌˆÊ’u
 	float fPreviousTrans[3];
+	float fNextTrans[3];
 	float fRotMat[16];
+	UINT unPreviousKeyFrame;
+	UINT unNextKeyFrame;
 } PMDBONE;
 
 /**
